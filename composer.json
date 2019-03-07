@@ -1,5 +1,5 @@
 {
-	"name" : "yii2-amylian-t3fluid/yii2-amylian-t3fluid",
+	"name" : "amylian/yii2-amylian-t3fluid",
 	"description" : "*EXPERIMENTAL* Yii2 ViewRenderer for Typo3 Fluid",
 	"type" : "yii2-extension",
 	"license" : "BSD-3-Clause",
