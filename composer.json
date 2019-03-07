@@ -15,5 +15,10 @@
 		"fluid",
 		"template",
 		"ViewRenderer"
-	]
+	],
+	"autoload" : {
+		"psr-4" : {
+			"amylian\\yii\\t3fluid\\" : "src"
+		}
+	}
 }
