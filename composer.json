@@ -9,6 +9,9 @@
 			"role" : "developer"
 		}
 	],
+        "require": {
+            "typo3/fluid": "*"
+        },
 	"keywords" : [
 		"yii",
 		"yii2",
