@@ -147,6 +147,7 @@ class ViewRenderer extends BaseViewRenderer
     {
         // Make the view accessible by "this"
         $this->templateView->assign('this', $view);
+        $this->templateView->assign('app', \Yii::$app);        
         // Compose and register array of useful template paths
         $this->configureTemplatePaths($view, $file);
         // Assign user passed parmeters

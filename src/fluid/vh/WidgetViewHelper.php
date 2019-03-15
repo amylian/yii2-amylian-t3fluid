@@ -41,31 +41,58 @@ namespace amylian\yii\t3fluid\fluid\vh;
  */
 class WidgetViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
+    const ARGUMENT_WIDGET_PHP_CLASS = 'widgetClass';
 
     /**
      * @var int 
      */
-    static $widgetVariableCounter = 1;
+    protected static $widgetVariableCounter = 1;
+
+    /**
+     * @var boolean
+     */
+    protected $escapeOutput = false;
 
     /**
      * @return void
      */
     public function initializeArguments()
     {
-        $this->registerArgument('class', 'string', 'Class of widget', true);
+        $this->registerArgument(static::ARGUMENT_WIDGET_PHP_CLASS, 'string', 'Class of widget', true);
         $this->registerArgument('as', 'string', 'Name of variable to be used for the widget instance', false, null);
         $this->registerArgument('arguments', 'array', 'Arguments to be passed to the widget class', false, null);
         $this->registerArgument('block', 'mixed', 'Specifies wether this is widget block(true) or not. NULL for auto detection', false, null);
     }
 
-    protected static function beginWidgetStatic(array $arguments, \Closure $renderChildrenClosure, \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext)
+    protected static function renderStaticInit(array &$arguments, \Closure $renderChildrenClosure, \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext, array &$renderData)
     {
-        
+        if (!isset($arguments['as'])) {
+            $arguments['as'] = '___tmpWidget' . static::$widgetVariableCounter++;
+        }
     }
 
-    protected static function endWidgetStatic(array $arguments, \Closure $renderChildrenClosure, \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext)
+    protected static function renderStaticContentBegin(array &$arguments, \Closure $renderChildrenClosure, \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext, array &$renderData)
     {
-        
+        // Create andr reigster widget object
+        $renderData['tmpWidget'] = $arguments[static::ARGUMENT_WIDGET_PHP_CLASS]::begin($arguments['arguments']);
+        $renderingContext->getVariableProvider()->add($arguments['as'], $renderData['tmpWidget']);
+    }
+
+    protected static function renderStaticChildrenContent(array &$arguments, \Closure $renderChildrenClosure, \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext, array &$renderData)
+    {
+        echo $renderChildrenClosure();
+    }
+
+    protected static function renderStaticContentEnd(array &$arguments, \Closure $renderChildrenClosure, \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext, array &$renderData)
+    {
+        $renderData['tmpWidget']->end();
+    }
+
+    protected static function renderStaticFinalize(array &$arguments, \Closure $renderChildrenClosure, \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext, array &$renderData)
+    {
+        if (isset($arguments['as'])) {
+            $renderingContext->getVariableProvider()->remove($arguments['as']);
+        }
     }
 
     /**
@@ -78,22 +105,17 @@ class WidgetViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHel
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext)
     {
+        $renderData = [];
         $result = '';
         ob_start();
         ob_implicit_flush(false);
         try {
-            if (!isset($arguments['as'])) {
-                $arguments['as'] = '___tmpWidget' . static::$widgetVariableCounter++;
-            }
-            // Create andr reigster widget object
-            $tmpWidget = $arguments['class']::begin($arguments['arguments']);
-            $renderingContext->getVariableProvider()->add($arguments['as'], $tmpWidget);
-            // Render child stuff
-            echo $renderChildrenClosure();
-            // Destroy widget and unregister
-            $tmpWidget->end();
-            $renderingContext->getVariableProvider()->remove($arguments['as']);
-            $tmpWidget = null;
+            static::renderStaticInit($arguments, $renderChildrenClosure, $renderingContext, $renderData);
+            static::renderStaticContentBegin($arguments, $renderChildrenClosure, $renderingContext, $renderData);
+            static::renderStaticChildrenContent($arguments, $renderChildrenClosure, $renderingContext, $renderData);
+            static::renderStaticContentEnd($arguments, $renderChildrenClosure, $renderingContext, $renderData);
+            static::renderStaticFinalize($arguments, $renderChildrenClosure, $renderingContext, $renderData);
+            unset($renderData['tmpWidget']);
         } catch (\Exception $e) {
             // close the output buffer opened above if it has not been closed already
             if (ob_get_level() > 0) {

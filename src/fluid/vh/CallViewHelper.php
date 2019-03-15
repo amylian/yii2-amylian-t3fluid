@@ -41,13 +41,19 @@ namespace amylian\yii\t3fluid\fluid\vh;
  */
 class CallViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
+    
+    /**
+     * @var boolean
+     */
+    protected $escapeOutput = false;
 
     /**
      * @return void
      */
     public function initializeArguments() {
         $this->registerArgument('method', 'string', 'path to method. Can be either <Class>::<staticMethod> or <objectVar>.<method>', true);
-        $this->registerArgument('arguments', 'array', 'array of arguments passed to the method', false, null);
+        $this->registerArgument('arguments', 'array', 'array of arguments passed to the method', false, []);
+        $this->registerArgument('noOutput', 'boolean', 'Does not output the result - even if possible', false, false);
     }
     
     
@@ -55,10 +61,11 @@ class CallViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelpe
     {
         $e = explode('.', $arguments['method']);
         if (count($e) < 2) {
-            return \call_user_func_array($arguments['method'], $arguments['arguments']);
+            $result = \call_user_func_array($arguments['method'], $arguments['arguments']);
         } else {
             $e[0] = $renderingContext->getVariableProvider()->get($e[0]);
-            return \call_user_func_array($e, $arguments['arguments']);
+            $result = \call_user_func_array($e, $arguments['arguments']);
         }
+        return is_object($result) ? '' : $result;
     }
 }
