@@ -13,9 +13,10 @@ namespace amylian\yii\t3fluid\fluid\vh\Active;
  *
  * @author andreas
  */
-class FieldViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
+class FieldViewHelper extends \amylian\yii\t3fluid\fluid\core\AbstractStaticViewHelper
 {
-    
+    const ARGUMENT_ACTIVE_FORM = 'activeForm';
+
     /**
      * @var boolean
      */
@@ -23,30 +24,42 @@ class FieldViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelp
 
     public function initializeArguments(): void
     {
-        $this->registerArgument('form', 'mixed', 'Related ActiveForm', false, null);
+        $this->registerArgument(\amylian\yii\t3fluid\fluid\vh\WidgetViewHelper::ARGUMENT_WIDGET_PHP_CLASS, 'Class of FieldWidget to be used. If not specified the standard field object of the active form is used ', false, null);
+        $this->registerArgument(static::ARGUMENT_ACTIVE_FORM, 'mixed', 'Variable ID of ActiveForm as specifed in as argument of <yf:active.form> (Default: ' . FormViewHelper::$defaultAsArgument . ')', false, FormViewHelper::$defaultAsArgument);
         $this->registerArgument('model', 'mixed', 'Object ID of the used model', true, null);
+        $this->registerArgument('config', 'array', 'Configuration array of the field component', false, []);
         $this->registerArgument('attribute', 'string', 'Attribute in model', true, null);
-        $this->registerArgument('options', 'array', 'Array of additional options', false, []);
+        $this->registerArgument('options', 'array', 'Array of addtional options used for rendering', false, []);
         $this->registerArgument('render', 'string', 'Render function to call', false, null);
         $this->registerArgument('renderArguments', 'array', 'parameters passed to the render function', false, []);
     }
-
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext)
+    
+    
+    protected static function beforeDoRenderStatic(array &$arguments, \Closure $renderChildrenClosure, \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext, array &$renderingData = array()): void
     {
+        parent::beforeDoRenderStatic($arguments, $renderChildrenClosure, $renderingContext, $renderingData);
         if (!is_object($arguments['model'])) {
             $arguments['model'] = $renderingContext->getVariableProvider()->getByPath($arguments['model']);
         }
-        if (!is_object($arguments['form'])) {
-            $arguments['form'] = $renderingContext->getVariableProvider()->getByPath($arguments['form']);
+        if (!$arguments[static::ARGUMENT_ACTIVE_FORM] instanceof \yii\widgets\ActiveForm) {
+            $arguments[static::ARGUMENT_ACTIVE_FORM] = $renderingContext->getVariableProvider()->get($arguments[static::ARGUMENT_ACTIVE_FORM]);
         }
-        if (!$arguments['form'] instanceof \yii\widgets\ActiveForm) {
+    }
+    
+
+    public static function doRenderStatic(array &$arguments, \Closure $renderChildrenClosure, \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext, array &$renderingData = [])
+    {
+        if (!$arguments[static::ARGUMENT_ACTIVE_FORM] instanceof \yii\widgets\ActiveForm) {
             throw new \TYPO3Fluid\Fluid\Core\ViewHelper\Exception('Instance of active form expected in form attribute');
         } else {
-            $f = $arguments['form']->field($arguments['model'], $arguments['attribute'], $arguments['options']);
+            if (isset($arguments[\amylian\yii\t3fluid\fluid\vh\WidgetViewHelper::ARGUMENT_WIDGET_PHP_CLASS])) {
+                $arguments['config']['class'] = $arguments[\amylian\yii\t3fluid\fluid\vh\WidgetViewHelper::ARGUMENT_WIDGET_PHP_CLASS];
+            }
+            $f = $arguments[static::ARGUMENT_ACTIVE_FORM]->field($arguments['model'], $arguments['attribute'], $arguments['options']);
             if ($arguments['render']) {
-                return (string) call_user_func_array([$f, $arguments['render']], $arguments['renderOptions']);
+               return (string) call_user_func_array([$f, $arguments['render']], $arguments['renderOptions']);
             } else {
-                return (string) $f;
+               return (string) $f;
             }
         }
     }

@@ -19,7 +19,7 @@ class PasswordViewHelper extends FieldViewHelper
     {
         parent::initializeArguments();
         $this->overrideArgument('render', 'string', 'Render function do be used', false, 'passwordInput');
-        $this->overrideArgument('renderArguments', 'array', 'Use renderOptions instead', false, []);
+        $this->overrideArgument('renderArguments', 'array', 'Do not use this attribute - Use items and renderOptions instead', false, []);
         $this->registerArgument('renderOptions', 'array', 'Options for rendering', false, []);
     }
     
