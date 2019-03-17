@@ -6,19 +6,20 @@
  * and open the template in the editor.
  */
 
-namespace amylian\yii\t3fluid\fluid\vh\Html;
+namespace amylian\yii\t3fluid\fluid\ViewHelpers\Html;
 
 /**
  * Generic View Helper calling \yii\helpers\Html::button
  *
  * @author andreas
  */
-class SubmitButtonViewHelper extends \amylian\yii\t3fluid\fluid\vh\Html\ButtonViewHelper
+class ButtonViewHelper extends \amylian\yii\t3fluid\fluid\ViewHelpers\Html\CallViewHelper
 {
+    use Standard2ParameterTrait;
     
     public function getDefaultMethodName()
     {
-        return 'submitButton';
+        return 'button';
     }
 
 }

@@ -6,14 +6,14 @@
  * and open the template in the editor.
  */
 
-namespace amylian\yii\t3fluid\fluid\vh\Active;
+namespace amylian\yii\t3fluid\fluid\ViewHelpers\Active;
 
 /**
  * Description of ActiveFormViewHelper
  *
  * @author andreas
  */
-class FormViewHelper extends \amylian\yii\t3fluid\fluid\vh\WidgetViewHelper
+class FormViewHelper extends \amylian\yii\t3fluid\fluid\ViewHelpers\WidgetViewHelper
 {
     
     public static $defaultAsArgument = '___currentActiveForm';

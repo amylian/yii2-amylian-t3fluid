@@ -6,19 +6,19 @@
  * and open the template in the editor.
  */
 
-namespace amylian\yii\t3fluid\fluid\vh\Active;
+namespace amylian\yii\t3fluid\fluid\ViewHelpers\Active;
 
 /**
  * Description of DropDownViewHelper
  *
  * @author andreas
  */
-class PasswordViewHelper extends FieldViewHelper
+class CheckboxViewHelper extends FieldViewHelper
 {
     public function initializeArguments(): void
     {
         parent::initializeArguments();
-        $this->overrideArgument('render', 'string', 'Render function do be used', false, 'passwordInput');
+        $this->overrideArgument('render', 'string', 'Render function do be used', false, 'checkbox');
         $this->overrideArgument('renderArguments', 'array', 'Do not use this attribute - Use items and renderOptions instead', false, []);
         $this->registerArgument('renderOptions', 'array', 'Options for rendering', false, []);
     }

@@ -6,14 +6,14 @@
  * and open the template in the editor.
  */
 
-namespace amylian\yii\t3fluid\fluid\vh\Html;
+namespace amylian\yii\t3fluid\fluid\ViewHelpers\Html;
 
 /**
  * Generic View Helper for \yii\helpers\Html calls. 
  *
  * @author andreas
  */
-class CallViewHelper extends \amylian\yii\t3fluid\fluid\vh\CallViewHelper
+class CallViewHelper extends \amylian\yii\t3fluid\fluid\ViewHelpers\CallViewHelper
 {
     
     const ARGUMENT_HELPER_CLASS = 'helperClass';

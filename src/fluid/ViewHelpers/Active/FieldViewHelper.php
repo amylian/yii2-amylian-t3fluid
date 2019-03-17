@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace amylian\yii\t3fluid\fluid\vh\Active;
+namespace amylian\yii\t3fluid\fluid\ViewHelpers\Active;
 
 /**
  * Description of FieldViewHelper
@@ -24,7 +24,7 @@ class FieldViewHelper extends \amylian\yii\t3fluid\fluid\core\AbstractStaticView
 
     public function initializeArguments(): void
     {
-        $this->registerArgument(\amylian\yii\t3fluid\fluid\vh\WidgetViewHelper::ARGUMENT_WIDGET_PHP_CLASS, 'Class of FieldWidget to be used. If not specified the standard field object of the active form is used ', false, null);
+        $this->registerArgument(\amylian\yii\t3fluid\fluid\ViewHelpers\WidgetViewHelper::ARGUMENT_WIDGET_PHP_CLASS, 'Class of FieldWidget to be used. If not specified the standard field object of the active form is used ', false, null);
         $this->registerArgument(static::ARGUMENT_ACTIVE_FORM, 'mixed', 'Variable ID of ActiveForm as specifed in as argument of <yf:active.form> (Default: ' . FormViewHelper::$defaultAsArgument . ')', false, FormViewHelper::$defaultAsArgument);
         $this->registerArgument('model', 'mixed', 'Object ID of the used model', true, null);
         $this->registerArgument('config', 'array', 'Configuration array of the field component', false, []);
@@ -52,8 +52,8 @@ class FieldViewHelper extends \amylian\yii\t3fluid\fluid\core\AbstractStaticView
         if (!$arguments[static::ARGUMENT_ACTIVE_FORM] instanceof \yii\widgets\ActiveForm) {
             throw new \TYPO3Fluid\Fluid\Core\ViewHelper\Exception('Instance of active form expected in form attribute');
         } else {
-            if (isset($arguments[\amylian\yii\t3fluid\fluid\vh\WidgetViewHelper::ARGUMENT_WIDGET_PHP_CLASS])) {
-                $arguments['config']['class'] = $arguments[\amylian\yii\t3fluid\fluid\vh\WidgetViewHelper::ARGUMENT_WIDGET_PHP_CLASS];
+            if (isset($arguments[\amylian\yii\t3fluid\fluid\ViewHelpers\WidgetViewHelper::ARGUMENT_WIDGET_PHP_CLASS])) {
+                $arguments['config']['class'] = $arguments[\amylian\yii\t3fluid\fluid\ViewHelpers\WidgetViewHelper::ARGUMENT_WIDGET_PHP_CLASS];
             }
             $f = $arguments[static::ARGUMENT_ACTIVE_FORM]->field($arguments['model'], $arguments['attribute'], $arguments['options']);
             if ($arguments['render']) {

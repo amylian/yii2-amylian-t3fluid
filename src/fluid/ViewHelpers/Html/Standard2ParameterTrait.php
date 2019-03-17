@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace amylian\yii\t3fluid\fluid\vh\Html;
+namespace amylian\yii\t3fluid\fluid\ViewHelpers\Html;
 
 /**
  * @author andreas
