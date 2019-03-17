@@ -32,7 +32,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace amylian\yii\t3fluid\fluid\vh;
+namespace amylian\yii\t3fluid\fluid\ViewHelpers;
 
 /**
  * FLuid ViewHelper used to assign values from attributes within a template

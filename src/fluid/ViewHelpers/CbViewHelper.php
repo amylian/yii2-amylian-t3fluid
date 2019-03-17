@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace amylian\yii\t3fluid\fluid\vh;
+namespace amylian\yii\t3fluid\fluid\ViewHelpers;
 
 /**
  * Encloses the text in curly braces

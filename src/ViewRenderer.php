@@ -117,7 +117,7 @@ class ViewRenderer extends BaseViewRenderer
     {
         $this->templateView = new \TYPO3Fluid\Fluid\View\TemplateView();
         $this->initFluidCache();
-        $this->addViewHelperNamespace('yf', '\\amylian\\yii\\t3fluid\\fluid\\vh');
+        $this->addViewHelperNamespace('yf', '\\amylian\\yii\\t3fluid\\fluid\\ViewHelpers');
     }
 
     protected function getExtStrippedFile($file)
